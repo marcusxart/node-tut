@@ -1,42 +1,44 @@
-console.log("11");
-// getUser(2, (user) => {
-//   getRepo(user.userName, (repo) => {
-//     getCommit(repo[0], (commit) => {
-//       console.log(commit);
-//     });
-//   });
-// });
-
-getUser(2)
-  .then((user) => getRepo(user.userName))
-  .then((repo) => getCommit(repo[0]))
-  .then((commit) => console.log(commit));
-
-console.log("22");
-
-function getUser(id) {
-  return new Promise((resolve, reject) => {
+const getUser = (id) => {
+  return new Promise((resolve) => {
     setTimeout(() => {
-      console.log("get user...");
-      resolve({ id, userName: "Ed" });
+      console.log(`getting user ${id}`);
+      resolve({ id, userName: "Marcus" });
     }, 2000);
   });
-}
+};
 
-function getRepo(username) {
-  return new Promise((resolve, reject) => {
+const getRepos = (username) => {
+  if (username) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        console.log(`getting ${username} repo`);
+        resolve(["repo1", "repo2", "repo3"]);
+      }, 2000);
+    });
+  }
+};
+
+const getCommit = (repo) => {
+  return new Promise((resolve) => {
     setTimeout(() => {
-      console.log(username);
-      resolve(["repo1", "repo2", "repo3"]);
+      console.log("Commit... " + repo);
+      resolve(repo);
     }, 2000);
   });
-}
+};
 
-function getCommit(repo) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      console.log("calling github....");
-      resolve("commit..");
-    }, 2000);
-  });
-}
+console.log("Before");
+const runData = async () => {
+  try {
+    const user = await getUser(1);
+    const repos = await getRepos(user.userName);
+    const commit = await getCommit(repos[0]);
+    console.log(commit);
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
+runData();
+
+console.log("After");
